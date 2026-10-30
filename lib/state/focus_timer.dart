@@ -22,6 +22,7 @@ class FocusTimer extends ChangeNotifier {
 
   Timer? _timer;
   DateTime? _lastTick;
+  double _fractionalSeconds = 0;
 
   double get progress {
     if (totalSeconds == 0) return 0;
@@ -57,6 +58,7 @@ class FocusTimer extends ChangeNotifier {
     if (remainingSeconds <= 0) reset();
     running = true;
     _lastTick = DateTime.now();
+    _fractionalSeconds = 0;
     _timer?.cancel();
     _timer = Timer.periodic(const Duration(milliseconds: 200), (_) => _tick());
     HapticFeedback.selectionClick();
@@ -73,6 +75,7 @@ class FocusTimer extends ChangeNotifier {
   void reset() {
     running = false;
     _timer?.cancel();
+    _fractionalSeconds = 0;
     totalSeconds = (isFocus ? selectedMinutes : breakMinutes) * 60;
     remainingSeconds = totalSeconds;
     notifyListeners();
@@ -81,6 +84,7 @@ class FocusTimer extends ChangeNotifier {
   void skip() {
     running = false;
     _timer?.cancel();
+    _fractionalSeconds = 0;
     if (isFocus) {
       _enterRest();
     } else {
@@ -90,9 +94,13 @@ class FocusTimer extends ChangeNotifier {
 
   void _tick() {
     final now = DateTime.now();
-    final delta = now.difference(_lastTick ?? now).inMilliseconds;
+    final deltaMs = now.difference(_lastTick ?? now).inMilliseconds;
     _lastTick = now;
-    final next = remainingSeconds - (delta / 1000).round();
+    _fractionalSeconds += deltaMs / 1000;
+    final whole = _fractionalSeconds.floor();
+    if (whole <= 0) return;
+    _fractionalSeconds -= whole;
+    final next = remainingSeconds - whole;
     if (next <= 0) {
       remainingSeconds = 0;
       _finish();

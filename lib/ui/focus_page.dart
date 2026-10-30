@@ -114,8 +114,15 @@ class FocusPage extends StatelessWidget {
                                   const SizedBox(width: 5),
                                   Text(
                                     isFocus
-                                        ? (running ? 'در حال تمرکز' : 'آمادهٔ شروع')
-                                        : 'استراحت کوتاه',
+                                        ? (running
+                                            ? 'در حال تمرکز'
+                                            : timer.remainingSeconds <
+                                                    timer.totalSeconds
+                                                ? 'متوقف شده'
+                                                : 'آمادهٔ شروع')
+                                        : (running
+                                            ? 'در حال استراحت'
+                                            : 'استراحت کوتاه'),
                                     style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.w600,
