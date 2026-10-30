@@ -1,6 +1,16 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:zamanyar/state/focus_timer.dart';
 
+Future<void> waitUntil(
+  bool Function() condition, {
+  Duration timeout = const Duration(seconds: 8),
+}) async {
+  final deadline = DateTime.now().add(timeout);
+  while (!condition() && DateTime.now().isBefore(deadline)) {
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+  }
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -10,7 +20,7 @@ void main() {
     timer.remainingSeconds = 60;
 
     timer.start();
-    await Future<void>.delayed(const Duration(milliseconds: 1200));
+    await waitUntil(() => timer.remainingSeconds < 60);
 
     expect(timer.running, isTrue);
     expect(timer.remainingSeconds, lessThan(60));
@@ -25,7 +35,7 @@ void main() {
     timer.remainingSeconds = 2;
 
     timer.start();
-    await Future<void>.delayed(const Duration(milliseconds: 2400));
+    await waitUntil(() => !timer.running);
 
     expect(timer.running, isFalse);
     expect(timer.mode, FocusMode.rest);
@@ -40,13 +50,28 @@ void main() {
     timer.remainingSeconds = 60;
 
     timer.start();
-    await Future<void>.delayed(const Duration(milliseconds: 1200));
+    await waitUntil(() => timer.remainingSeconds < 60);
     timer.pause();
     final frozen = timer.remainingSeconds;
 
     await Future<void>.delayed(const Duration(milliseconds: 800));
     expect(timer.remainingSeconds, frozen);
     expect(frozen, lessThan(60));
+    timer.dispose();
+  });
+
+  test('picking a preset during a break starts a new focus session', () async {
+    final timer = FocusTimer(onSessionComplete: (_, _) {});
+    timer.mode = FocusMode.rest;
+    timer.totalSeconds = timer.breakMinutes * 60;
+    timer.remainingSeconds = timer.totalSeconds;
+
+    timer.setPreset(45);
+
+    expect(timer.mode, FocusMode.focus);
+    expect(timer.selectedMinutes, 45);
+    expect(timer.totalSeconds, 45 * 60);
+    expect(timer.remainingSeconds, 45 * 60);
     timer.dispose();
   });
 }

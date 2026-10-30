@@ -37,17 +37,14 @@ class FocusTimer extends ChangeNotifier {
   }
 
   void setPreset(int minutes) {
-    if (running || mode == FocusMode.rest) {
-      selectedMinutes = minutes;
-      if (!running) {
-        totalSeconds = minutes * 60;
-        remainingSeconds = totalSeconds;
-      }
-    } else {
-      selectedMinutes = minutes;
-      totalSeconds = minutes * 60;
-      remainingSeconds = totalSeconds;
-    }
+    if (running) return;
+    selectedMinutes = minutes;
+    // Picking a length while resting starts a new focus session instead of
+    // keeping the break mode with a focus-sized duration.
+    mode = FocusMode.focus;
+    _fractionalSeconds = 0;
+    totalSeconds = minutes * 60;
+    remainingSeconds = totalSeconds;
     notifyListeners();
   }
 
