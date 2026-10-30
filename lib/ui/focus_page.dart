@@ -8,6 +8,7 @@ import '../main.dart';
 import '../state/focus_timer.dart';
 import 'widgets/charts.dart';
 import 'widgets/glass.dart';
+import 'widgets/subjects_sheet.dart';
 
 class FocusPage extends StatelessWidget {
   const FocusPage({super.key});
@@ -260,6 +261,16 @@ class FocusPage extends StatelessWidget {
                         onTap: () => timer.setSubject(s.id),
                       ),
                     ],
+                    const SizedBox(width: 8),
+                    _SubjectChoice(
+                      label: 'درس جدید',
+                      color: c.primarySoft,
+                      selected: false,
+                      onTap: () async {
+                        final subject = await openSubjectEditor(context);
+                        if (subject != null) timer.setSubject(subject.id);
+                      },
+                    ),
                   ],
                 ),
               ),

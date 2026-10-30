@@ -7,6 +7,7 @@ import '../../main.dart';
 import '../../models/models.dart';
 import 'widgets/charts.dart';
 import 'widgets/glass.dart';
+import 'widgets/subjects_manager.dart';
 import 'widgets/task_editor.dart';
 import 'widgets/task_tile.dart';
 import 'widgets/settings_sheet.dart';
@@ -202,34 +203,73 @@ class HomePage extends StatelessWidget {
             title: 'شروع سریع',
             icon: Icons.bolt_rounded,
             action: 'درس‌ها',
-            onAction: () => onOpenTab(3),
+            onAction: () => openSubjectsManager(context),
           ),
-          SizedBox(
-            height: 116,
-            child: state.subjects.isEmpty
-                ? const SizedBox.shrink()
-                : ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    itemCount: state.subjects.length,
-                    separatorBuilder: (_, _) => const SizedBox(width: 10),
-                    itemBuilder: (context, index) {
-                      final subject = state.subjects[index];
-                      final minutes = state
-                              .subjectMinutesSince(startOfWeek(today))[subject.id] ??
-                          0;
-                      return _SubjectQuickCard(
-                        subject: subject,
-                        minutes: minutes,
-                        onTap: () {
-                          TimerScope.of(context, listen: false)
-                              .setSubject(subject.id);
-                          onOpenTab(2);
-                        },
-                      );
-                    },
+          if (state.subjects.isEmpty)
+            GlassCard(
+              padding: const EdgeInsets.all(18),
+              child: Row(
+                children: [
+                  Container(
+                    width: 42,
+                    height: 42,
+                    decoration: BoxDecoration(
+                      color: c.primary.withValues(alpha: 0.16),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child:
+                        Icon(Icons.menu_book_rounded, color: c.primarySoft),
                   ),
-          ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('هر درسی که می‌خواهی اضافه کن',
+                            style: Theme.of(context).textTheme.titleSmall),
+                        const SizedBox(height: 3),
+                        Text(
+                          'ریاضی، زبان، فیزیک… با رنگ و هدف هفتگی.',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Pill(
+                    label: 'درس جدید',
+                    icon: Icons.add_rounded,
+                    color: c.primarySoft,
+                    onTap: () => openSubjectsManager(context),
+                  ),
+                ],
+              ),
+            )
+          else
+            SizedBox(
+              height: 116,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                itemCount: state.subjects.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 10),
+                itemBuilder: (context, index) {
+                  final subject = state.subjects[index];
+                  final minutes = state
+                          .subjectMinutesSince(startOfWeek(today))[subject.id] ??
+                      0;
+                  return _SubjectQuickCard(
+                    subject: subject,
+                    minutes: minutes,
+                    onTap: () {
+                      TimerScope.of(context, listen: false)
+                          .setSubject(subject.id);
+                      onOpenTab(2);
+                    },
+                  );
+                },
+              ),
+            ),
           const SizedBox(height: 24),
           SectionHeader(
             title: 'این هفته',

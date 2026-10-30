@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../core/format.dart';
+import '../../core/jalali.dart';
 import '../../core/theme.dart';
 import '../../main.dart';
 import '../../state/app_state.dart';
 import 'glass.dart';
+import 'subjects_manager.dart';
 
 Future<void> openSettings(BuildContext context) {
   return showAppSheet<void>(context, const SettingsSheet());
@@ -58,6 +60,7 @@ class _SettingsSheetState extends State<SettingsSheet> {
   @override
   Widget build(BuildContext context) {
     final c = context.colors;
+    final subjects = AppScope.of(context).subjects;
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 4, 20, 28),
       child: Column(
@@ -131,6 +134,46 @@ class _SettingsSheetState extends State<SettingsSheet> {
             ],
           ),
           const SizedBox(height: 22),
+          _Label('درس‌ها'),
+          const SizedBox(height: 8),
+          GlassCard(
+            padding: const EdgeInsets.all(14),
+            radius: 18,
+            onTap: () => openSubjectsManager(context),
+            child: Row(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: c.primary.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(13),
+                  ),
+                  child: Icon(Icons.menu_book_rounded,
+                      color: c.primarySoft, size: 21),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('مدیریت درس‌ها',
+                          style: Theme.of(context).textTheme.titleSmall),
+                      const SizedBox(height: 3),
+                      Text(
+                        subjects.isEmpty
+                            ? 'هنوز درسی اضافه نکرده‌ای'
+                            : '${faDigits(subjects.length)} درس ثبت شده',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(Icons.chevron_left_rounded, color: c.muted, size: 20),
+              ],
+            ),
+          ),
+          const SizedBox(height: 22),
           Row(
             children: [
               _Label('هدف تمرکز روزانه'),
@@ -188,7 +231,7 @@ class _SettingsSheetState extends State<SettingsSheet> {
                           Text('زمان‌یار',
                               style: Theme.of(context).textTheme.titleMedium),
                           Text(
-                            'نسخهٔ ۱.۰.۰ • برنامه‌ریز درس و تمرکز',
+                            'نسخهٔ ۱.۱.۰ • برنامه‌ریز درس و تمرکز',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],

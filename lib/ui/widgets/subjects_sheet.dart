@@ -9,12 +9,11 @@ import '../../state/app_state.dart';
 import '../../models/models.dart';
 import 'glass.dart';
 
-Future<bool> openSubjectEditor(BuildContext context, {Subject? subject}) async {
-  final result = await showAppSheet<bool>(
+Future<Subject?> openSubjectEditor(BuildContext context, {Subject? subject}) {
+  return showAppSheet<Subject>(
     context,
     SubjectEditorSheet(subject: subject),
   );
-  return result ?? false;
 }
 
 class SubjectEditorSheet extends StatefulWidget {
@@ -59,7 +58,7 @@ class _SubjectEditorSheetState extends State<SubjectEditorSheet> {
     } else {
       _state.addSubject(subject);
     }
-    Navigator.of(context).pop(true);
+    Navigator.of(context).pop(subject);
   }
 
   Future<void> _delete() async {
@@ -84,7 +83,7 @@ class _SubjectEditorSheetState extends State<SubjectEditorSheet> {
     );
     if (confirmed == true && mounted) {
       _state.deleteSubject(widget.subject!.id);
-      Navigator.of(context).pop(true);
+      Navigator.of(context).pop();
     }
   }
 

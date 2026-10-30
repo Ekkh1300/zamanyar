@@ -8,6 +8,7 @@ import '../models/models.dart';
 import '../state/app_state.dart';
 import 'widgets/charts.dart';
 import 'widgets/glass.dart';
+import 'widgets/subjects_manager.dart';
 import 'widgets/subjects_sheet.dart';
 
 class StatsPage extends StatelessWidget {
@@ -262,8 +263,8 @@ class StatsPage extends StatelessWidget {
           SectionHeader(
             title: 'درس‌ها',
             icon: Icons.menu_book_rounded,
-            action: 'درس جدید',
-            onAction: () => openSubjectEditor(context),
+            action: 'مدیریت',
+            onAction: () => openSubjectsManager(context),
           ),
           if (legend.isEmpty)
             GlassCard(

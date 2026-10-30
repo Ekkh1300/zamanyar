@@ -25,6 +25,8 @@
 | <img src="docs/screenshots/home.png" width="300" /> | <img src="docs/screenshots/tasks.png" width="300" /> |
 | **تمرکز · Focus** | **آمار · Stats** |
 | <img src="docs/screenshots/focus.png" width="300" /> | <img src="docs/screenshots/stats.png" width="300" /> |
+| **درس‌ها · Subjects** | **درس جدید · New subject** |
+| <img src="docs/screenshots/subjects.png" width="300" /> | <img src="docs/screenshots/subject_editor.png" width="300" /> |
 
 ---
 
@@ -36,7 +38,7 @@
 - **تقویم شمسی بومی** — انتخابگر تاریخ جلالی با نمایش مناسبت روز و دکمهٔ «برو به امروز»
 - **تایمر تمرکز** — پومودورو با حلقهٔ پیشرفت، انتخاب درس، توقف/ادامه و ثبت خودکار جلسه
 - **آمار و بینش** — نمودار ستونی هفته، نقشهٔ فعالیت ۶ هفته، سهم درس‌ها، پیشرفت هدف هر درس، دستاوردها و رکوردها
-- **درس‌ها با رنگ اختصاصی** — افزودن، ویرایش و حذف درس با رنگ و هدف هفتگی
+- **بخش درس‌ها** — هر درسی که بخواهی اضافه کن؛ رنگ اختصاصی، هدف هفتگی و نوار پیشرفت. درس تازه را از خانه، تنظیمات، آمار، فرم کار یا تایمر تمرکز بساز
 - **ظاهر مدرن** — شیشه‌ای، تیره/روشن/سیستم، فونت وزیرمتن، اعداد فارسی، کاملاً راست‌به‌چپ
 - **جشن و انگیزه** — کاغذرنگی هنگام تکمیل کارها، نوار پیوستگی و پیام‌های تشویقی
 - **کاملاً آفلاین** — همهٔ داده‌ها روی خود دستگاه ذخیره می‌شوند؛ بدون حساب، بدون اینترنت
@@ -47,7 +49,7 @@
 - **Native Jalali calendar** — Persian date picker with day events and a "jump to today" action
 - **Focus timer** — Pomodoro with progress ring, subject tagging, pause/resume and automatic session logging
 - **Stats & insights** — weekly bar chart, 6-week activity heatmap, subject share donut, per-subject goals, achievements and records
-- **Color-coded subjects** — add, edit and delete subjects with their own color and weekly goal
+- **Subjects section** — add any subject with its own color, weekly goal and progress bar; create one right from home, settings, stats, the task form or the focus timer
 - **Modern UI** — glassmorphism, dark / light / system themes, Vazirmatn font, Persian digits, full RTL
 - **Delightful feedback** — confetti on completion, streak bar and encouraging messages
 - **Fully offline** — all data stays on the device; no account, no network
@@ -56,10 +58,10 @@
 
 ## نصب · Install
 
-1. فایل `zamanyar-v1.0.0.apk` را از [بخش Releases](https://github.com/Ekkh1300/zamanyar/releases/latest) دانلود کنید.
+1. فایل `zamanyar-v1.1.0.apk` را از [بخش Releases](https://github.com/Ekkh1300/zamanyar/releases/latest) دانلود کنید.
 2. روی گوشی اندروید ۷ به بالا (minSdk 24) نصب کنید. اجازهٔ «نصب از منابع ناشناس» لازم است.
 
-1. Download `zamanyar-v1.0.0.apk` from [Releases](https://github.com/Ekkh1300/zamanyar/releases/latest).
+1. Download `zamanyar-v1.1.0.apk` from [Releases](https://github.com/Ekkh1300/zamanyar/releases/latest).
 2. Install on Android 7.0+ (minSdk 24). Allow "install from unknown sources" if asked.
 
 The APK is a universal build (`arm64-v8a`, `armeabi-v7a`, `x86_64`) signed with a release key (APK Signature Scheme v2).
@@ -115,7 +117,8 @@ lib/
   ui/          shell.dart · home_page.dart · tasks_page.dart
                focus_page.dart · stats_page.dart
   ui/widgets/  charts.dart · task_editor.dart · jalali_picker.dart
-               subjects_sheet.dart · settings_sheet.dart · glass.dart
+               subjects_manager.dart · subjects_sheet.dart
+               settings_sheet.dart · glass.dart
 ```
 
 State lives in `ChangeNotifier`s exposed through `InheritedNotifier` (`AppScope`, `TimerScope`) and is persisted as JSON in `shared_preferences`.

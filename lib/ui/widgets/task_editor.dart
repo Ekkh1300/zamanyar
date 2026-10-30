@@ -8,6 +8,7 @@ import '../../models/models.dart';
 import '../../state/app_state.dart';
 import 'glass.dart';
 import 'jalali_picker.dart';
+import 'subjects_sheet.dart';
 
 Future<bool> openTaskEditor(
   BuildContext context, {
@@ -84,6 +85,11 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
       initialTime: _time ?? const TimeOfDay(hour: 18, minute: 0),
     );
     if (picked != null) setState(() => _time = picked);
+  }
+
+  Future<void> _addSubject() async {
+    final subject = await openSubjectEditor(context);
+    if (subject != null && mounted) setState(() => _subjectId = subject.id);
   }
 
   String? get _timeString {
@@ -255,6 +261,7 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
                   selected: _subjectId == s.id,
                   onTap: () => setState(() => _subjectId = s.id),
                 ),
+              _AddSubjectChip(onTap: _addSubject),
             ],
           ),
           const SizedBox(height: 20),
@@ -502,6 +509,43 @@ class _SubjectChip extends StatelessWidget {
                 fontSize: 12.5,
                 fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
                 color: selected ? c.text : c.muted,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AddSubjectChip extends StatelessWidget {
+  const _AddSubjectChip({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.colors;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: c.primary.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: c.primary.withValues(alpha: 0.45)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.add_rounded, size: 16, color: c.primarySoft),
+            const SizedBox(width: 5),
+            Text(
+              'درس جدید',
+              style: TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.w700,
+                color: c.primarySoft,
               ),
             ),
           ],
